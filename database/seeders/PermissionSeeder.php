@@ -49,7 +49,12 @@ class PermissionSeeder extends Seeder
             "order-create",
             "order-edit",
             "order-approve",
-            "order-reject"
+            "order-reject",
+            "membership-list",
+            "membership-create",
+            "membership-edit",
+            "membership-approve",
+            "membership-reject"
         ];
 
         foreach ($permissions as $permission) {
@@ -62,6 +67,8 @@ class PermissionSeeder extends Seeder
         $shopcoordclerk = Role::firstOrCreate(['name' => 'Shop Coord Clerk']);
         $welfareshopclerk = Role::firstOrCreate(['name' => 'Welfare Shop Clerk']);
         $welfareshopoc = Role::firstOrCreate(['name' => 'Welfare Shop OC']);
+        $membershipclerk = Role::firstOrCreate(['name' => 'Membership Clerk']);
+        $membershipoc = Role::firstOrCreate(['name' => 'Membership OC']);
 
 
         // Assign permissions to roles
@@ -70,5 +77,7 @@ class PermissionSeeder extends Seeder
         $shopcoordclerk->givePermissionTo(['product-list', 'product-create','product-delete','welfare-list','welfare-create','welfare-delete','supplier-list','supplier-create','supplier-delete','order-list','order-reject','order-approve','order-edit']);
         $welfareshopclerk ->givePermissionTo(['order-list','order-create','order-edit']);
         $welfareshopoc ->givePermissionTo(['order-list','order-approve','order-reject','order-edit']);
+        $membershipclerk  ->givePermissionTo(['membership-list','membership-create']);
+        $membershipoc ->givePermissionTo(['membership-list','membership-approve','membership-edit']);
     }
 }

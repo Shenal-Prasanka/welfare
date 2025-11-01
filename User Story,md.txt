@@ -1,0 +1,188 @@
+# Welfare Management System – Comprehensive User Stories
+
+---
+
+## Introduction
+
+The Welfare Management System manages the full life-cycle of welfare shop stock and welfare item loans, covering modules for Stock, Cash Loans, Deduction, and Reporting, with user levels ranging from unit clerks to Directorate of Welfare and audit staff. All flows ensure proper approvals, traceability, and role-based access throughout.
+
+---
+
+## System Architecture (High-Level)
+
+- **User Interaction Layer:** For all relevant user interfaces (web/dashboard/forms)
+- **Application Functionality Layer:** Handles workflows, approvals, validation, and reporting logic
+- **Database Layer:** Relational store for items, transactions, master data, logs, etc.
+
+---
+
+## Modules
+
+- **Welfare Item Loan Module**: Handling applications, guarantees, tracking, approval, loan deductions.
+- **Welfare Shop Stock Module**: Items, inventory, purchase orders, issues, CRVs, returns, and approvals.
+- **Deduction Module**: Management of loan/other deductions, payroll links, schedules.
+- **Report Module**: Full reporting and monitoring, including audit, price-list, loans, transactions.
+- **Cash Loan Module**: 100k/300k loan applications, approvals, and repayments.
+
+---
+
+## User Levels & Key Responsibilities
+
+### Unit Level:
+- **Unit Clerk:**
+  - Create item loan applications
+  - Find/view membership/loan/guarantor info
+- **Unit CO (Bn CO):**
+  - Recommend/forward item loan applications
+  - View all unit and RHQ loan/membership details
+
+### Welfare Shops:
+- **Welfare Shop Clerk:**
+  - Create/forward loan applications (with/for Units)
+  - Maintain items, submit CRVs, POs, invoices
+  - Verify membership/guarantors
+- **Welfare Shop OC:**
+  - Add/issue items, approve/forward CRVs, POs, invoices
+
+### Directorate (Dte) of Welfare:
+- **Subject Clerk - Shop Coord Section:**
+  - Edit/forward loan, CRV, PO details; manage master/shop data
+- **Shop Coord OC:**
+  - Approve loans, recommend/approve CRVs, POs
+- **Account/Audit Clk/OC, Ledger Clk/OC, Membership Clk/OC, SO1 Account, Col Welfare, Director Welfare:**
+  - Process voucher payments, run reports, audit, manage deductions, oversee memberships.
+
+---
+
+## Master Data
+
+### Welfare Shop
+- Welfare Shop Code, Name, Location
+
+### Supplier
+- Supplier Code, Name
+
+### Item Master (Definition & Price List)
+- Item Code, Name, Model, Category, Normal/Welfare Price
+
+---
+
+## Transaction Forms (Key UI Elements)
+
+### Item Loan Application (for Member and Guarantors)
+- All military, membership, personnel, and item/loan request fields
+- Consent, supporting documents (upload), membership/guarantor select
+
+### Cash Loan Application (100k/300k)
+- Applicant/guarantor forms as above, plus bank details, branch, and supporting documents
+
+### Cash Receive Voucher (CRV)
+- Bill/demand detail, issuing/depot info, item/model/qty, price, special notes
+
+### Purchase Order (PO)
+- Item details, pricing (welfare/MRP), totals
+
+### Invoice
+- Amount, linked item and member, type (cash/loan), status, date, number of installments if loan.
+
+---
+
+## Major Flows (Business Stories)
+
+### **1. Add New Item to Stock**
+As a Welfare Shop Clerk,
+- I navigate to “Add Item,” enter all required fields from Item Master (code, name, model, category, prices), and submit.
+- System marks the new item as “pending approval.”
+- Shop OC reviews and approves/rejects item entry.
+- Approved items become “Active” in stock, visible for issue or sale.
+
+### **2. Purchase Orders (PO) – Creation and Approval**
+As a Subject Clerk – Shop Coord Section,
+- I prepare a PO, specifying each item line (with model, qty, prices), supplier, and shop.
+- I submit for approval; PO flows:
+  - Shop OC reviews/forwards
+  - Shop Coord Section (Clerk, then OC) approves/finalizes
+- Only after approval (status=approved_final) does the PO become eligible for receipt (CRV).
+
+### **3. Goods Receipt – CRV (Multi-Stage Approval)**
+As a Welfare Shop Clerk, after goods arrive,
+- I record a new Cash Receive Voucher (CRV) linked to the approved PO.
+- I enter required bill/depot info and each item line (item name, model, qty, welfare/MRP prices, etc.)
+- Submission triggers an approval chain:
+  - Welfare Shop OC reviews and recommends
+  - Shop Coord Section (Clerk forwards, OC approves)
+- CRV status flows: pending → recommended → forwarded → approved → rejected (at any step, per user role)
+- Upon final approval:
+  - System automatically increases stock/creates new `items` records as per CRV line-level detail
+  - Transaction is logged (Goods Received)
+  - Any mismatch to PO triggers flag/exception
+
+### **4. Issue Item to Member (with Invoice, Cash/Loan)**
+As a Welfare Shop Clerk,
+- I select the member, verify eligibility/stock, and issue item (create Item Issue Record, select type (cash/loan), enter amount and (if loan) installments)
+- System creates Invoice and Loan record accordingly
+- Shop OC reviews/approves issue; Shop Coord Section may also approve, depending on workflow config
+- System logs the transaction (“Issued to Member”) and updates stock
+
+### **5. Return or Adjust Stock**
+As a Welfare Shop Clerk,
+- If an item is returned/defective, I record a return with reason and qty
+- Shop OC verifies, and if needed, item is marked “Returned/Defective” and count adjusts in stock
+- Audit section is notified automatically for verification
+
+### **6. Supplier Payment (Accounts Payable) and Ledger Updates**
+As an Account Section Clerk,
+- I generate supplier payment vouchers after full CRV/PO approval chain
+- OC Account approves payment
+- System updates supplier paid-status, stock valuation, and tracks the linkage between CRV, PO, payment (all traceable)
+
+### **7. Reporting and Monitoring**
+- Role-based access to daily/monthly/periodic reports (POs, CRVs, issued items, loans, returns, price lists, discrepancies, audit logs)
+- Exports to Excel/PDF available for all major flows
+
+---
+
+## Approval Chains (PO/CRV/Item Issue/Loans)
+- **Purchase Orders:**
+  - Clerk (create) → Shop OC (recommend) → Shop Coord Clerk (forward) → Shop Coord OC (final approve)
+- **CRV:**
+  - Clerk (create) → Shop OC (recommend) → Shop Coord Clerk (forward) → Shop Coord OC (final approve)
+- **Issue/Invoice/Loans:**
+  - Clerk (issue) → Shop OC (approve/forward) → Shop Coord OC/Account/Audit as required
+- **Item/Shop/Supplier Master:**
+  - Subject Clerk - Shop Coord Section (add/edit/remove), OC (approve)
+
+---
+
+## Master Data Management Stories
+- As a Subject Clerk - Shop Coord Section, I can create, update, enable/disable master records for:
+  - Welfare Shop (code, name, location)
+  - Suppliers (code, name)
+  - Item Masters (code, name, model, category, prices)
+  - Prices can be edited only with audit-logged changes
+
+---
+
+## Exception/Alert Stories
+- If a PO or CRV is rejected, system notifies and enables edit/resubmit, with audit log of comments.
+- If items delivered differ from PO (by quantity or value), discrepancy flag for audit review.
+- Auto-alerts if any item falls below minimum stock.
+- Block attempts to issue unapproved items.
+
+---
+
+## Postconditions & Acceptance Criteria
+- All stock/transaction quantities are traceable, accurate, and audit-logged with timestamps and user IDs.
+- Documents (PO, CRV, Invoice, Payment) are bi-directionally linked for trace/view.
+- All actions are role/permission controlled per user stories above.
+- Reports: All flows exportable as Excel/PDF/Print, with daily/periodic breakdowns by role.
+
+---
+
+## Reference: Field Definitions
+- For each transaction type (PO, CRV, Returns, Loan/Invoice) use field lists detailed above in the transaction form section (e.g., item name/model/qty/prices in CRV etc.).
+- No form or flow may collect or expose fields not in this approved list, and all approval chains are enforced as per above roles.
+
+---
+
+*This user story set is auto-generated from your requirements – see dev team for system diagrams, API/OpenAPI specs, and permission matrix as next implementation artifacts.*

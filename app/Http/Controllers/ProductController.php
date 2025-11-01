@@ -86,20 +86,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-         $request->validate([
-            'product' => 'required|string',
-            'category_id' => 'required|exists:categorys,id',
-            'active' => 'required|boolean',
+        $request->validate([
+            'vat' => 'required|numeric',
+            'tax' => 'required|numeric',
+            'welfare_price' => 'required|numeric',
         ]);
 
-        $product = Product::find($id);
-
-        $product->product = $request->product;
-        $product->category_id = $request->category_id;
-        $product->active = $request->active;
+        $product = Product::findOrFail($id);
+        $product->vat = $request->vat;
+        $product->tax = $request->tax;
+        $product->welfare_price = $request->welfare_price;
         $product->save();
 
-        return redirect()->route('products.index')->with('warning', 'product updated successfully.');
+        return redirect()->route('products.index')->with('warning', 'Product pricing updated successfully.');
     }
 
     /**

@@ -22,6 +22,7 @@
                                 <table id="productTable" style="border: 2px solid gray;" class="table">
                                     <thead>
                                         <tr>
+                                            <th class="text-center">{{ __('Product Code') }}</th>
                                             <th class="text-center">{{ __('Product') }}</th>
                                             <th class="text-center">{{ __('Category') }}</th>
                                             <th class="text-center">{{ __('Normal Price') }}</th>
@@ -35,6 +36,7 @@
                                     <tbody>
                                         @foreach ($products as $product)
                                             <tr>
+                                                <td class="text-center"><strong>{{ $product->product_number }}</strong></td>
                                                 <td class="text-center">{{ $product->product }}</td>
                                                 <td class="text-center">{{ $product->category->category }}</td>
                                                 <td class="text-center">{{ $product->normal_price }}</td>
@@ -50,15 +52,20 @@
                                                 <td class="text-center text-nowrap">
                                                     @can('product-edit')
                                                     <!-- Edit Button -->
-                                                    <button type="button" 
-                                                        class="btn btn-sm btn-warning btn-edit-product"
-                                                        data-id="{{ $product->id }}"
-                                                        data-product="{{ $product->product }}"
-                                                        data-category="{{ $product->category_id }}"
-                                                        data-active="{{ $product->active }}"
-                                                        data-action="{{ route('products.update', $product->id) }}">
-                                                        <i class="bi bi-pencil-square"></i>
-                                                    </button>
+                                                    <button 
+    class="btn btn-sm btn-warning btn-edit-product"
+    data-id="{{ $product->id }}"
+    data-product="{{ $product->product }}"
+    data-category="{{ $product->category_id }}"
+    data-active="{{ $product->active }}"
+    data-vat="{{ $product->vat }}"
+    data-tax="{{ $product->tax }}"
+    data-normal-price="{{ $product->normal_price }}"
+    data-action="{{ route('products.update', $product->id) }}"
+>
+    Edit
+</button>
+
                                                      @endcan
                                                     @can('product-approve')
                                                     @if ($product->active)

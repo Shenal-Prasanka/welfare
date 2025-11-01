@@ -9,12 +9,12 @@
                         <div class="card-header bg-dark">
                             <div class="col-12 d-flex justify-content-between align-items-center">
                                 <h5 class="m-0 font-weight-bold">{{ __(' Membership Details') }}</h5>
-
+                                @can('membership-create')
                                 <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
                                     data-target="#ModalMembershipCreate">
                                     <i class="bi bi-plus-circle"></i> {{ __('Create Membership') }}
                                 </a>
-
+                                @endcan
                             </div>
                         </div>
                         <div class="card-body">
@@ -31,7 +31,9 @@
                                             <th class="text-center">{{ __('Membership-Date') }}</th>
                                             <th class="text-center">{{ __('Address') }}</th>
                                             <th class="text-center">{{ __('Status') }}</th>
-                                            <th class="text-center">{{ __('Actions') }}</th>
+                                            @can('membership-edit')
+                                                <th class="text-center">{{ __('Actions') }}</th>
+                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -52,45 +54,47 @@
                                                         {{ $membership->active ? 'Pending' : __('Approved') }}
                                                     </p>
                                                 </td>
-                                                <td class="text-center text-nowrap">
+                                                @can('membership-edit')
+                                                    <td class="text-center text-nowrap">
 
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-warning btn-edit-membership"
-                                                        data-id="{{ $membership->id }}"
-                                                        data-name="{{ $membership->name }}"
-                                                        data-email="{{ $membership->email }}"
-                                                        data-mobile="{{ $membership->mobile }}"
-                                                        data-address="{{ $membership->address }}"
-                                                        data-membership_date="{{ $membership->membership_date?->format('Y-m-d') ?? 'N/A' }}"
-                                                        data-army_id="{{ $membership->army_id }}"
-                                                        data-regiment_no="{{ $membership->regiment_no }}"
-                                                        data-nic="{{ $membership->nic }}"
-                                                        data-active="{{ $membership->active }}"
-                                                        data-action="{{ route('memberships.update', $membership->id) }}"
-                                                        data-toggle="modal" data-target="#ModalMembershipEdit">
-                                                        <i class="bi bi-pencil-square"></i>
-                                                    </button>
-
-
-                                                    @if ($membership->active)
-                                                        <a href="{{ route('memberships.toggle-status', $membership->id) }}"
-                                                            class="btn btn-sm btn-success" title="Approve Membership">
-                                                            Approve
-                                                        </a>
-                                                    @endif
-
-
-
-                                                    <form action="{{ route('memberships.destroy', $membership->id) }}"
-                                                        method="POST" style="display: inline-block;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger btn-delete">
-                                                            <i class="bi bi-trash3-fill"></i>
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-warning btn-edit-membership"
+                                                            data-id="{{ $membership->id }}"
+                                                            data-name="{{ $membership->name }}"
+                                                            data-email="{{ $membership->email }}"
+                                                            data-mobile="{{ $membership->mobile }}"
+                                                            data-address="{{ $membership->address }}"
+                                                            data-membership_date="{{ $membership->membership_date?->format('Y-m-d') ?? 'N/A' }}"
+                                                            data-army_id="{{ $membership->army_id }}"
+                                                            data-regiment_no="{{ $membership->regiment_no }}"
+                                                            data-nic="{{ $membership->nic }}"
+                                                            data-active="{{ $membership->active }}"
+                                                            data-action="{{ route('memberships.update', $membership->id) }}"
+                                                            data-toggle="modal" data-target="#ModalMembershipEdit">
+                                                            <i class="bi bi-pencil-square"></i>
                                                         </button>
-                                                    </form>
 
-                                                </td>
+
+                                                        @if ($membership->active)
+                                                            <a href="{{ route('memberships.toggle-status', $membership->id) }}"
+                                                                class="btn btn-sm btn-success" title="Approve Membership">
+                                                                Approve
+                                                            </a>
+                                                        @endif
+
+
+                                                        <!--
+                                                            <form action="{{ route('memberships.destroy', $membership->id) }}"
+                                                                method="POST" style="display: inline-block;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-sm btn-danger btn-delete">
+                                                                    <i class="bi bi-trash3-fill"></i>
+                                                                </button>
+                                                            </form>
+                                                        -->
+                                                    </td>
+                                                @endcan
                                             </tr>
                                         @endforeach
                                     </tbody>

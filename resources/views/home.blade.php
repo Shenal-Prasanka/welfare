@@ -18,7 +18,57 @@
 
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                
+                @if(auth()->user()->hasRole('Welfare Shop Clerk') || auth()->user()->hasRole('Welfare Shop OC'))
+                    <!-- Stock Statistics for Welfare Shop Staff -->
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ $totalStock }}</h3>
+                                <p>Total Stock Items</p>
+                            </div>
+                            <div class="icon">
+                                <i class="bi bi-box-seam"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ $availableStock }}</h3>
+                                <p>Available Stock</p>
+                            </div>
+                            <div class="icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{ $soldStock }}</h3>
+                                <p>Sold Stock</p>
+                            </div>
+                            <div class="icon">
+                                <i class="bi bi-cart-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3>{{ $damagedStock }}</h3>
+                                <p>Damaged Stock</p>
+                            </div>
+                            <div class="icon">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <!-- Default Statistics for Other Roles -->
                     <div class="col-lg-2 col-6">
                         <div class="small-box bg-primary">
                             <div class="inner">
@@ -93,7 +143,7 @@
                             </div>
                         </div>
                     </div>
-                
+                @endif
             </div>
             </div>
 
