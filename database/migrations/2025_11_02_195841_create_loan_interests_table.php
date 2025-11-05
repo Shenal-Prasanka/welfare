@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('profile_image')->nullable();
+        Schema::create('loan_interests', function (Blueprint $table) {
+            $table->id();
+            $table->enum('months', ['4', '8', '12', '24', '36']);
+            $table->decimal('interest', 5, 2);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('profile_image');
-        });
+        Schema::dropIfExists('loan_interests');
     }
 };

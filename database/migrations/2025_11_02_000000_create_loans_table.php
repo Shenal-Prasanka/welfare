@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->string('application_id')->unique(); // Auto-generated LN-XXXXX
+            $table->decimal('loan_type', 10, 2); // Loan amount
+            $table->string('deduct_time_period')->nullable();
             
             // Member Details
-            $table->enum('loan_type', ['100000', '300000']);
             $table->string('enlisted_no');
             $table->string('regiment_no');
             $table->string('rank');
@@ -32,11 +33,17 @@ return new class extends Migration
             $table->date('enlisted_date');
             $table->date('retire_date')->nullable();
             $table->enum('paying_installments', ['Yes', 'No']);
-            $table->string('bank_name');
-            $table->string('branch');
-            $table->string('account_no');
+            
+            // Bank Details
+            $table->string('bank_name')->nullable();
+            $table->string('branch')->nullable();
+            $table->string('account_no')->nullable();
+            
+            // Contact Details
             $table->string('mobile_no');
             $table->string('land_no')->nullable();
+            
+            // Agreement
             $table->boolean('consent_agreement')->default(false);
             $table->string('soldier_statement')->nullable(); // File path
             
@@ -68,12 +75,14 @@ return new class extends Migration
             
             // Approval workflow
             $table->unsignedBigInteger('unit_id')->nullable();
-            $table->unsignedBigInteger('created_by'); // Loan Clerk
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->unsignedBigInteger('approved_by')->nullable(); // Loan OC
+            $table->unsignedBigInteger('created_by'); // Unit Clerk
+            $table->enum('status', ['pending', 'oc_approved', 'approved', 'rejected'])->default('pending');
+            $table->unsignedBigInteger('approved_by')->nullable(); // Unit OC
+            $table->timestamp('approved_at')->nullable();
+            $table->unsignedBigInteger('oc_approved_by')->nullable(); // OC final approval
+            $table->timestamp('oc_approved_at')->nullable();
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->text('rejection_reason')->nullable();
-            $table->timestamp('approved_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             
             $table->timestamps();
@@ -81,6 +90,7 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('created_by')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('approved_by')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('oc_approved_by')->references('id')->on('users')->nullOnDelete();
             $table->foreign('rejected_by')->references('id')->on('users')->nullOnDelete();
         });
     }

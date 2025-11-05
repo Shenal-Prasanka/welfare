@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('mobile_no');
             $table->string('land_no')->nullable();
             $table->enum('paying_installments', ['Yes', 'No']);
+            $table->string('deduct_time_period')->nullable();
             $table->boolean('consent_agreement')->default(false);
             $table->string('soldier_statement')->nullable(); // File path
             
@@ -70,11 +71,29 @@ return new class extends Migration
             // Approval workflow
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedBigInteger('created_by'); // Unit Clerk
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', [
+                'pending', 
+                'oc_approved', 
+                'shop_coord_clerk_approved', 
+                'shop_coord_oc_approved', 
+                'clerk_approved', 
+                'approved', 
+                'rejected',
+                'shop_coord_rejected',
+                'shop_coord_oc_rejected'
+            ])->default('pending');
             $table->unsignedBigInteger('approved_by')->nullable(); // Unit OC
+            $table->timestamp('approved_at')->nullable();
+            $table->unsignedBigInteger('shop_coord_approved_by')->nullable(); // Shop Coord Clerk
+            $table->timestamp('shop_coord_approved_at')->nullable();
+            $table->boolean('loan_checked')->default(false);
+            $table->boolean('membership_checked')->default(false);
+            $table->unsignedBigInteger('shop_coord_oc_approved_by')->nullable(); // Shop Coord OC
+            $table->timestamp('shop_coord_oc_approved_at')->nullable();
+            $table->unsignedBigInteger('final_approved_by')->nullable(); // Welfare Shop Clerk
+            $table->timestamp('final_approved_at')->nullable();
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->text('rejection_reason')->nullable();
-            $table->timestamp('approved_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             
             $table->timestamps();
@@ -83,6 +102,9 @@ return new class extends Migration
             $table->foreign('welfare_id')->references('id')->on('welfares')->nullOnDelete();
             $table->foreign('created_by')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('approved_by')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('shop_coord_approved_by')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('shop_coord_oc_approved_by')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('final_approved_by')->references('id')->on('users')->nullOnDelete();
             $table->foreign('rejected_by')->references('id')->on('users')->nullOnDelete();
         });
     }

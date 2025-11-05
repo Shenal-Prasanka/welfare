@@ -26,6 +26,14 @@ return new class extends Migration
             $table->boolean('active')->default(1); 
             $table->boolean('is_deleted')->default(0);
             $table->string('password');
+            $table->string('profile_image')->nullable();
+            $table->string('nic')->nullable()->unique();
+            $table->string('armyId')->nullable()->unique();
+            $table->string('officeAddress')->nullable();
+            $table->date('enlistedDate')->nullable();
+            $table->date('retireDate')->nullable();
+            $table->unsignedBigInteger('welfare_id')->nullable();
+            $table->string('role')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -61,6 +69,8 @@ return new class extends Migration
             $table->dropColumn('unit_id');
             $table->dropForeign(['rank_id']);
             $table->dropColumn('rank_id');
+            $table->dropForeign(['welfare_id']);
+            $table->dropColumn('welfare_id');
         });
     }
 };

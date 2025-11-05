@@ -99,7 +99,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li>
                             <a href="{{ route('profile.show') }}" class="dropdown-item">
-                                <i class="me-2 fas fa-file"></i> {{ __('My profile') }}
+                                <i class="me-2 fas fa-user-circle"></i> {{ __('My Profile') }}
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>

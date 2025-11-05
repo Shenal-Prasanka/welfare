@@ -8,7 +8,6 @@
                     <div class="card">
                         <div class="card-header bg-dark d-flex justify-content-between align-items-center">
                             <h5 class="m-0 font-weight-bold text-white">{{ __('Create Purchase Order') }}</h5>
-                            <a href="{{ route('purchaseorder.index') }}" class="btn btn-secondary btn-sm">{{ __('Back') }}</a>
                         </div>
                         <div class="card-body">
                             <form method="POST" action="{{ route('purchaseorder.store') }}" novalidate>
@@ -42,10 +41,10 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <select name="items[0][item_name]" class="form-control" required>
+                                                    <select name="items[0][item_name]" class="form-control product-select" data-row="0" required>
                                                         <option value="">-- Select Product --</option>
                                                         @foreach($products as $product)
-                                                            <option value="{{ $product->product }}">{{ $product->product }}</option>
+                                                            <option value="{{ $product->product }}" data-welfare-price="{{ $product->welfare_price ?? 0 }}">{{ $product->product }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
@@ -62,7 +61,8 @@
                                 </div>
                                 <button type="button" id="addRowBtn" class="btn btn-outline-primary mb-3">{{ __('Add Row') }}</button>
 
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{{ route('purchaseorder.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
                                     <button type="submit" class="btn btn-primary">{{ __('Submit PO') }}</button>
                                 </div>
                             </form>
@@ -95,6 +95,17 @@
                 row.querySelector('.qty-input').addEventListener('input', () => calculateNetValues(row));
                 row.querySelector('.welfare-price-input').addEventListener('input', () => calculateNetValues(row));
                 row.querySelector('.mrp-input').addEventListener('input', () => calculateNetValues(row));
+                
+                // Add product select listener
+                const productSelect = row.querySelector('.product-select');
+                if (productSelect) {
+                    productSelect.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        const welfarePrice = selectedOption.getAttribute('data-welfare-price') || 0;
+                        row.querySelector('.welfare-price-input').value = welfarePrice;
+                        calculateNetValues(row);
+                    });
+                }
             });
         });
 
@@ -103,10 +114,10 @@
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>
-                    <select name="items[${rowIndex}][item_name]" class="form-control" required>
+                    <select name="items[${rowIndex}][item_name]" class="form-control product-select" data-row="${rowIndex}" required>
                         <option value="">-- Select Product --</option>
                         @foreach($products as $product)
-                            <option value="{{ $product->product }}">{{ $product->product }}</option>
+                            <option value="{{ $product->product }}" data-welfare-price="{{ $product->welfare_price ?? 0 }}">{{ $product->product }}</option>
                         @endforeach
                     </select>
                 </td>
@@ -124,6 +135,14 @@
             tr.querySelector('.qty-input').addEventListener('input', () => calculateNetValues(tr));
             tr.querySelector('.welfare-price-input').addEventListener('input', () => calculateNetValues(tr));
             tr.querySelector('.mrp-input').addEventListener('input', () => calculateNetValues(tr));
+            
+            // Add product select listener for new row
+            tr.querySelector('.product-select').addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const welfarePrice = selectedOption.getAttribute('data-welfare-price') || 0;
+                tr.querySelector('.welfare-price-input').value = welfarePrice;
+                calculateNetValues(tr);
+            });
 
             rowIndex++;
         });

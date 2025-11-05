@@ -1,4 +1,5 @@
 <!-- Modal -->
+@if(isset($user))
 <div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="updateUserModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -13,7 +14,6 @@
                 @session('success')
                     <div class="alert alert-success">{{ $value }}</div>
                 @endsession
-
                 <form method="POST" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data"
                     novalidate>
                     @csrf
@@ -267,3 +267,4 @@
         modal.find('#roles\\[\\]').val(roles);
     });
 </script>
+@endif

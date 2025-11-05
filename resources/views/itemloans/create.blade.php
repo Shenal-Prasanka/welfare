@@ -72,7 +72,14 @@
 
                                         <div class="col-md-4 mb-3">
                                             <label class="form-label">{{ __('Previous Unit') }}</label>
-                                            <input type="text" name="previous_unit" class="form-control @error('previous_unit') is-invalid @enderror" value="{{ old('previous_unit') }}">
+                                            <select name="previous_unit" class="form-select @error('previous_unit') is-invalid @enderror">
+                                                <option value="">{{ __('Select Previous Unit') }}</option>
+                                                @foreach($units as $unit)
+                                                    <option value="{{ $unit->unit }}" {{ old('previous_unit') == $unit->unit ? 'selected' : '' }}>
+                                                        {{ $unit->unit }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                             @error('previous_unit')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                         </div>
 
@@ -183,6 +190,19 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
+                                            <label class="form-label">{{ __('Deduct Time Period (Months)') }}</label>
+                                            <select name="deduct_time_period" class="form-control @error('deduct_time_period') is-invalid @enderror">
+                                                <option value="">{{ __('Select Time Period') }}</option>
+                                                @foreach($loanInterests as $loanInterest)
+                                                    <option value="{{ $loanInterest->months }}" {{ old('deduct_time_period') == $loanInterest->months ? 'selected' : '' }}>
+                                                        {{ $loanInterest->months }} {{ __('Months') }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('deduct_time_period')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label">{{ __('Upload Soldier Statement') }} (PDF, JPG)</label>
                                             <input type="file" name="soldier_statement" class="form-control @error('soldier_statement') is-invalid @enderror" accept=".pdf,.jpg,.jpeg,.png">
                                             @error('soldier_statement')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -259,7 +279,14 @@
 
                                         <div class="col-md-4 mb-3">
                                             <label class="form-label">{{ __('Previous Unit') }}</label>
-                                            <input type="text" name="guarantor1_previous_unit" class="form-control @error('guarantor1_previous_unit') is-invalid @enderror" value="{{ old('guarantor1_previous_unit') }}">
+                                            <select name="guarantor1_previous_unit" class="form-select @error('guarantor1_previous_unit') is-invalid @enderror">
+                                                <option value="">{{ __('Select Previous Unit') }}</option>
+                                                @foreach($units as $unit)
+                                                    <option value="{{ $unit->unit }}" {{ old('guarantor1_previous_unit') == $unit->unit ? 'selected' : '' }}>
+                                                        {{ $unit->unit }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                             @error('guarantor1_previous_unit')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                         </div>
 
@@ -346,7 +373,14 @@
 
                                         <div class="col-md-4 mb-3">
                                             <label class="form-label">{{ __('Previous Unit') }}</label>
-                                            <input type="text" name="guarantor2_previous_unit" class="form-control @error('guarantor2_previous_unit') is-invalid @enderror" value="{{ old('guarantor2_previous_unit') }}">
+                                            <select name="guarantor2_previous_unit" class="form-select @error('guarantor2_previous_unit') is-invalid @enderror">
+                                                <option value="">{{ __('Select Previous Unit') }}</option>
+                                                @foreach($units as $unit)
+                                                    <option value="{{ $unit->unit }}" {{ old('guarantor2_previous_unit') == $unit->unit ? 'selected' : '' }}>
+                                                        {{ $unit->unit }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                             @error('guarantor2_previous_unit')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                         </div>
 

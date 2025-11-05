@@ -9,6 +9,7 @@ class Loan extends Model
     protected $fillable = [
         'application_id',
         'loan_type',
+        'deduct_time_period',
         'enlisted_no',
         'regiment_no',
         'rank',
@@ -61,6 +62,8 @@ class Loan extends Model
         'rejection_reason',
         'approved_at',
         'rejected_at',
+        'oc_approved_by',
+        'oc_approved_at',
     ];
 
     protected $casts = [
@@ -74,6 +77,7 @@ class Loan extends Model
         'guarantor2_retire_date' => 'date',
         'approved_at' => 'datetime',
         'rejected_at' => 'datetime',
+        'oc_approved_at' => 'datetime',
         'consent_agreement' => 'boolean',
     ];
 
@@ -87,9 +91,24 @@ class Loan extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    public function ocApprover()
+    {
+        return $this->belongsTo(User::class, 'oc_approved_by');
+    }
+
     public function rejecter()
     {
         return $this->belongsTo(User::class, 'rejected_by');
+    }
+
+    public function approvedLoan()
+    {
+        return $this->hasOne(ApprovedLoan::class);
+    }
+
+    public function rejectedLoan()
+    {
+        return $this->hasOne(RejectedLoan::class);
     }
 
     protected static function boot()

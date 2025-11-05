@@ -45,8 +45,16 @@
                                                     <span class="badge bg-warning">{{ __('Pending') }}</span>
                                                 @elseif($loan->status == 'oc_approved')
                                                     <span class="badge bg-info">{{ __('OC Approved') }}</span>
+                                                @elseif($loan->status == 'shop_coord_clerk_approved')
+                                                    <span class="badge bg-primary">{{ __('Coord Clerk Approved') }}</span>
+                                                @elseif($loan->status == 'shop_coord_oc_approved')
+                                                    <span class="badge bg-primary">{{ __('Shop Coord OC Approved') }}</span>
                                                 @elseif($loan->status == 'approved')
                                                     <span class="badge bg-success">{{ __('Approved') }}</span>
+                                                @elseif($loan->status == 'shop_coord_rejected')
+                                                    <span class="badge bg-danger">{{ __('Shop Coord Rejected') }}</span>
+                                                @elseif($loan->status == 'shop_coord_oc_rejected')
+                                                    <span class="badge bg-danger">{{ __('Shop Coord OC Rejected') }}</span>
                                                 @else
                                                     <span class="badge bg-danger">{{ __('Rejected') }}</span>
                                                 @endif

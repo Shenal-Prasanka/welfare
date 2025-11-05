@@ -99,9 +99,18 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item has-treeview">
+                            <a href="{{ route('loaninterests.index') }}" class="nav-link">
+                                <i class="bi bi-percent nav-icon text-info mr-2"></i>
+                                <p>
+                                    {{ __('Loan Interest-Manage') }}
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             @endrole
+           
             @role('Shop Coord OC||Shop Coord Clerk')
                 <li class="nav-item">
                     <a href="{{ route('supplys.index') }}" class="nav-link">
@@ -150,7 +159,7 @@
                 </li>
             @endrole
             
-            @role('Unit Clerk||Unit OC||Shop Coord Clerk||Shop Coord OC||Welfare Shop Clerk||Welfare Shop OC')
+            @role('Unit Clerk||Unit OC||Shop Coord Clerk||Shop Coord OC||Welfare Shop Clerk||Welfare Shop OC||Staff Officer')
                 <li class="nav-item">
                     <a href="{{ route('itemloans.index') }}" class="nav-link">
                         <i class="bi bi-clipboard-check nav-icon text-primary mr-2"></i>
@@ -161,7 +170,7 @@
                 </li>
             @endrole
             
-            @role('Loan Clerk||Loan OC')
+            @role('Loan Clerk||Loan OC||Account SO||Staff Officer')
                 <li class="nav-item">
                     <a href="{{ route('loans.index') }}" class="nav-link">
                         <i class="bi bi-cash-coin nav-icon text-success mr-2"></i>

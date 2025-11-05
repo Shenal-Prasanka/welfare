@@ -45,10 +45,14 @@
                                             <td>
                                                 @if($loan->status == 'pending')
                                                     <span class="badge bg-warning">{{ __('Pending') }}</span>
+                                                @elseif($loan->status == 'oc_approved')
+                                                    <span class="badge bg-info">{{ __('OC Approved') }}</span>
                                                 @elseif($loan->status == 'approved')
                                                     <span class="badge bg-success">{{ __('Approved') }}</span>
                                                 @else
-                                                    <span class="badge bg-danger">{{ __('Rejected') }}</span>
+                                                    <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $loan->rejection_reason }}">
+                                                        {{ __('Rejected') }} <i class="bi bi-info-circle"></i>
+                                                    </span>
                                                 @endif
                                             </td>
                                             <td>
@@ -62,9 +66,15 @@
                                             <td>{{ $loan->created_at->format('Y-m-d') }}</td>
                                             <td>
                                                 <div class="d-flex justify-content-center align-items-center" style="gap: 5px;">
-                                                    <a href="{{ route('loans.show', $loan->id) }}" class="btn btn-sm btn-warning" title="{{ __('View') }}">
-                                                        <i class="bi bi-eye"></i>
-                                                    </a>
+                                                    @role('Staff Officer')
+                                                        <a href="{{ route('loans.staffReview', $loan->id) }}" class="btn btn-sm btn-primary" title="{{ __('Staff Review') }}">
+                                                            <i class="bi bi-clipboard-check"></i>
+                                                        </a>
+                                                    @else
+                                                        <a href="{{ route('loans.show', $loan->id) }}" class="btn btn-sm btn-warning" title="{{ __('View') }}">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                    @endrole
                                                 </div>
                                             </td>
                                         </tr>
@@ -105,6 +115,12 @@
             columnDefs: [
                 { orderable: false, targets: [7] } // Actions column
             ]
+        });
+        
+        // Initialize Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 

@@ -169,9 +169,16 @@ Route::put('/itemloans/{id}', [ItemLoanController::class, 'update'])->name('item
 Route::post('/itemloans/{id}/approve', [ItemLoanController::class, 'approve'])->name('itemloans.approve');
 Route::post('/itemloans/{id}/reject', [ItemLoanController::class, 'reject'])->name('itemloans.reject');
 Route::get('/itemloans/{id}/check-loan', [ItemLoanController::class, 'checkLoan'])->name('itemloans.checkLoan');
-Route::post('/itemloans/{id}/check-membership', [ItemLoanController::class, 'checkMembership'])->name('itemloans.checkMembership');
+Route::get('/itemloans/{id}/check-membership', [ItemLoanController::class, 'checkMembership'])->name('itemloans.checkMembership');
 Route::post('/itemloans/{id}/shop-coord-approve', [ItemLoanController::class, 'shopCoordApprove'])->name('itemloans.shopCoordApprove');
+Route::post('/itemloans/{id}/shop-coord-oc-approve', [ItemLoanController::class, 'shopCoordOCApprove'])->name('itemloans.shopCoordOCApprove');
+Route::post('/itemloans/{id}/shop-coord-oc-reject', [ItemLoanController::class, 'shopCoordOCReject'])->name('itemloans.shopCoordOCReject');
+Route::post('/itemloans/{id}/clerk-approve', [ItemLoanController::class, 'clerkApprove'])->name('itemloans.clerkApprove');
+Route::get('/itemloans/{id}/issue', [ItemLoanController::class, 'issue'])->name('itemloans.issue');
+Route::get('/itemloans/{id}/invoice', [ItemLoanController::class, 'invoice'])->name('itemloans.invoice');
+Route::post('/itemloans/{id}/process-issue', [ItemLoanController::class, 'processIssue'])->name('itemloans.processIssue');
 Route::post('/itemloans/{id}/shop-coord-reject', [ItemLoanController::class, 'shopCoordReject'])->name('itemloans.shopCoordReject');
+Route::post('/itemloans/{id}/staff-officer-reject', [ItemLoanController::class, 'staffOfficerReject'])->name('itemloans.staffOfficerReject');
 
 // Serve soldier statement files directly
 Route::get('/soldier-statements/{filename}', function ($filename) {
@@ -198,11 +205,17 @@ Route::get('/loan-statements/{filename}', function ($filename) {
 // Define the Loan routes
 Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
 Route::get('/loans/create', [LoanController::class, 'create'])->name('loans.create');
+Route::get('/loans/search', [LoanController::class, 'search'])->name('loans.search');
 Route::post('/loans', [LoanController::class, 'store'])->name('loans.store');
 Route::get('/loans/{id}', [LoanController::class, 'show'])->name('loans.show');
 Route::get('/loans/{id}/check', [LoanController::class, 'check'])->name('loans.check');
+Route::get('/loans/{id}/check-membership', [LoanController::class, 'checkMembership'])->name('loans.checkMembership');
+Route::get('/loans/{id}/staff-review', [LoanController::class, 'staffReview'])->name('loans.staffReview');
 Route::get('/loans/{id}/edit', [LoanController::class, 'edit'])->name('loans.edit');
 Route::put('/loans/{id}', [LoanController::class, 'update'])->name('loans.update');
 Route::post('/loans/{id}/approve', [LoanController::class, 'approve'])->name('loans.approve');
 Route::post('/loans/{id}/reject', [LoanController::class, 'reject'])->name('loans.reject');
+
+// Loan Interest routes
+Route::resource('loaninterests', \App\Http\Controllers\LoanInterestController::class);
 

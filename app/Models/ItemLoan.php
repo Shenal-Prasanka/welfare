@@ -30,6 +30,7 @@ class ItemLoan extends Model
         'mobile_no',
         'land_no',
         'paying_installments',
+        'deduct_time_period',
         'consent_agreement',
         'soldier_statement',
         'guarantor1_enlisted_no',

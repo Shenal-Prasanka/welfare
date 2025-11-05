@@ -9,19 +9,19 @@
                     <div class="card-header bg-dark text-white">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h5 class="m-0 font-weight-bold">{{ __('Check Loan Eligibility') }} - {{ $loan->application_id }}</h5>
+                                <h5 class="m-0 font-weight-bold">{{ __('Check Membership') }} - {{ $loan->application_id }}</h5>
                                 <small>{{ __('Status') }}: 
                                     @if($loan->status == 'pending')
                                         <span class="badge bg-warning">{{ __('Pending') }}</span>
                                     @elseif($loan->status == 'approved')
-                                        <span class="badge bg-success">{{ __('Approved') }}</span>
+                                        <span class="badge bg-light text-dark">{{ __('Approved') }}</span>
                                     @else
                                         <span class="badge bg-danger">{{ __('Rejected') }}</span>
                                     @endif
                                 </small>
                             </div>
-                            <a href="{{ route('loans.show', $loan->id) }}" class="btn btn-sm btn-light">
-                                <i class="bi bi-arrow-left"></i> {{ __('Back to Application') }}
+                            <a href="{{ route('loans.check', $loan->id) }}" class="btn btn-sm btn-light">
+                                <i class="bi bi-arrow-left"></i> {{ __('Back to Check Loan') }}
                             </a>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                                                     <td>{{ $loan->previous_unit ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{ __('Welfare Membership') }}</th>
+                                                    <th>{{ __('Membership') }}</th>
                                                     <td>
                                                         <span class="badge {{ $loan->welfare_membership == 'Yes' ? 'bg-success' : 'bg-secondary' }}">
                                                             {{ $loan->welfare_membership }}
@@ -69,7 +69,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{ __('Welfare Membership Date') }}</th>
+                                                    <th>{{ __('Membership Date') }}</th>
                                                     <td>{{ $loan->welfare_membership_date ? $loan->welfare_membership_date->format('Y-m-d') : 'N/A' }}</td>
                                                 </tr>
                                             </tbody>
@@ -112,7 +112,7 @@
                                                     <td>{{ $loan->guarantor1_previous_unit ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{ __('Welfare Membership') }}</th>
+                                                    <th>{{ __('Membership') }}</th>
                                                     <td>
                                                         <span class="badge {{ $loan->guarantor1_welfare_membership == 'Yes' ? 'bg-success' : 'bg-secondary' }}">
                                                             {{ $loan->guarantor1_welfare_membership }}
@@ -120,7 +120,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{ __('Welfare Membership Date') }}</th>
+                                                    <th>{{ __('Membership Date') }}</th>
                                                     <td>N/A</td>
                                                 </tr>
                                             </tbody>
@@ -163,7 +163,7 @@
                                                     <td>{{ $loan->guarantor2_previous_unit ?? 'N/A' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{ __('Welfare Membership') }}</th>
+                                                    <th>{{ __('Membership') }}</th>
                                                     <td>
                                                         <span class="badge {{ $loan->guarantor2_welfare_membership == 'Yes' ? 'bg-success' : 'bg-secondary' }}">
                                                             {{ $loan->guarantor2_welfare_membership }}
@@ -171,7 +171,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{ __('Welfare Membership Date') }}</th>
+                                                    <th>{{ __('Membership Date') }}</th>
                                                     <td>N/A</td>
                                                 </tr>
                                             </tbody>
@@ -181,49 +181,80 @@
                             </div>
                         </div>
 
-                        {{-- Search Previous Loans Section --}}
+                        {{-- Membership Details Section --}}
                         <div class="card mt-4">
-                            <div class="card-header bg-success text-white">
-                                <h6 class="mb-0"><i class="bi bi-search"></i> {{ __('Search Previous Loans') }}</h6>
+                            <div class="card-header bg-info text-dark">
+                                <h6 class="mb-0"><i class="bi bi-card-checklist"></i> {{ __('Membership Details') }}</h6>
                             </div>
                             <div class="card-body">
-                                <form id="searchLoanForm" class="row g-3">
-                                    <div class="col-md-5">
-                                        <label class="form-label">{{ __('Enlisted No') }}</label>
-                                        <input type="text" class="form-control" id="search_enlisted_no" placeholder="Enter Enlisted No" value="{{ $loan->enlisted_no }}">
+                                <div class="row">
+                                    {{-- Member Membership --}}
+                                    <div class="col-md-4">
+                                        <h6 class="text-primary"><strong>{{ __('Member') }}</strong></h6>
+                                        @php
+                                            $memberMembership = \App\Models\Membership::where('army_id', $loan->army_id)->first();
+                                        @endphp
+                                        @if($memberMembership)
+                                            <div class="alert alert-success">
+                                                <strong><i class="bi bi-check-circle"></i> {{ __('Active Membership') }}</strong>
+                                                <hr>
+                                                <p class="mb-1"><strong>{{ __('Name') }}:</strong> {{ $memberMembership->name }}</p>
+                                                <p class="mb-1"><strong>{{ __('Membership Date') }}:</strong> {{ $memberMembership->membership_date ? $memberMembership->membership_date->format('Y-m-d') : 'N/A' }}</p>
+                                                <p class="mb-1"><strong>{{ __('Army ID') }}:</strong> {{ $memberMembership->army_id }}</p>
+                                                <p class="mb-1"><strong>{{ __('Regiment No') }}:</strong> {{ $memberMembership->regiment_no }}</p>
+                                                <p class="mb-1"><strong>{{ __('NIC') }}:</strong> {{ $memberMembership->nic }}</p>
+                                            </div>
+                                        @else
+                                            <div class="alert alert-warning">
+                                                <i class="bi bi-x-circle"></i> {{ __('No Membership Found') }}
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div class="col-md-5">
-                                        <label class="form-label">{{ __('Army ID') }}</label>
-                                        <input type="text" class="form-control" id="search_army_id" placeholder="Enter Army ID" value="{{ $loan->army_id }}">
+
+                                    {{-- Guarantor 1 Membership --}}
+                                    <div class="col-md-4">
+                                        <h6 class="text-info"><strong>{{ __('Guarantor 1') }}</strong></h6>
+                                        @php
+                                            $guarantor1Membership = \App\Models\Membership::where('army_id', $loan->guarantor1_army_id)->first();
+                                        @endphp
+                                        @if($guarantor1Membership)
+                                            <div class="alert alert-success">
+                                                <strong><i class="bi bi-check-circle"></i> {{ __('Active Membership') }}</strong>
+                                                <hr>
+                                                <p class="mb-1"><strong>{{ __('Name') }}:</strong> {{ $guarantor1Membership->name }}</p>
+                                                <p class="mb-1"><strong>{{ __('Membership Date') }}:</strong> {{ $guarantor1Membership->membership_date ? $guarantor1Membership->membership_date->format('Y-m-d') : 'N/A' }}</p>
+                                                <p class="mb-1"><strong>{{ __('Army ID') }}:</strong> {{ $guarantor1Membership->army_id }}</p>
+                                                <p class="mb-1"><strong>{{ __('Regiment No') }}:</strong> {{ $guarantor1Membership->regiment_no }}</p>
+                                                <p class="mb-1"><strong>{{ __('NIC') }}:</strong> {{ $guarantor1Membership->nic }}</p>
+                                            </div>
+                                        @else
+                                            <div class="alert alert-warning">
+                                                <i class="bi bi-x-circle"></i> {{ __('No Membership Found') }}
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div class="col-md-2 d-flex align-items-end">
-                                        <button type="button" class="btn btn-success w-100" onclick="searchPreviousLoans()">
-                                            <i class="bi bi-search"></i> {{ __('Search') }}
-                                        </button>
-                                    </div>
-                                </form>
-                                
-                                <div id="searchResults" class="mt-4" style="display: none;">
-                                    <hr>
-                                    <h6 class="text-primary"><strong id="searchResultTitle"></strong></h6>
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-bordered">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>{{ __('Application ID') }}</th>
-                                                    <th>{{ __('Name') }}</th>
-                                                    <th>{{ __('Loan Amount') }}</th>
-                                                    <th>{{ __('Total Amount') }}</th>
-                                                    <th>{{ __('Monthly') }}</th>
-                                                    <th>{{ __('Period') }}</th>
-                                                    <th>{{ __('Interest %') }}</th>
-                                                    <th>{{ __('Date') }}</th>
-                                                    <th>{{ __('Deductions') }}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="searchResultsBody">
-                                            </tbody>
-                                        </table>
+
+                                    {{-- Guarantor 2 Membership --}}
+                                    <div class="col-md-4">
+                                        <h6 class="text-secondary"><strong>{{ __('Guarantor 2') }}</strong></h6>
+                                        @php
+                                            $guarantor2Membership = \App\Models\Membership::where('army_id', $loan->guarantor2_army_id)->first();
+                                        @endphp
+                                        @if($guarantor2Membership)
+                                            <div class="alert alert-success">
+                                                <strong><i class="bi bi-check-circle"></i> {{ __('Active Membership') }}</strong>
+                                                <hr>
+                                                <p class="mb-1"><strong>{{ __('Name') }}:</strong> {{ $guarantor2Membership->name }}</p>
+                                                <p class="mb-1"><strong>{{ __('Membership Date') }}:</strong> {{ $guarantor2Membership->membership_date ? $guarantor2Membership->membership_date->format('Y-m-d') : 'N/A' }}</p>
+                                                <p class="mb-1"><strong>{{ __('Army ID') }}:</strong> {{ $guarantor2Membership->army_id }}</p>
+                                                <p class="mb-1"><strong>{{ __('Regiment No') }}:</strong> {{ $guarantor2Membership->regiment_no }}</p>
+                                                <p class="mb-1"><strong>{{ __('NIC') }}:</strong> {{ $guarantor2Membership->nic }}</p>
+                                            </div>
+                                        @else
+                                            <div class="alert alert-warning">
+                                                <i class="bi bi-x-circle"></i> {{ __('No Membership Found') }}
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -231,10 +262,20 @@
 
                         {{-- Action Buttons --}}
                         <div class="mt-4">
-                            <a href="{{ route('loans.checkMembership', $loan->id) }}" class="btn btn-info">
-                                <i class="bi bi-person-check"></i> {{ __('Check Membership') }}
-                            </a>
-                            @role('Loan OC||Staff Officer')
+                            @role('Loan OC')
+                                @if($loan->status == 'pending')
+                                    <form action="{{ route('loans.approve', $loan->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success me-2">
+                                            <i class="bi bi-check-circle"></i> {{ __('Approve') }}
+                                        </button>
+                                    </form>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                                        <i class="bi bi-x-circle"></i> {{ __('Reject') }}
+                                    </button>
+                                @endif
+                            @endrole
+                            @role('Staff Officer')
                                 @if($loan->status == 'pending')
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">
                                         <i class="bi bi-x-circle"></i> {{ __('Reject') }}
@@ -276,97 +317,4 @@
         </div>
     </div>
 </div>
-
-<script>
-function searchPreviousLoans() {
-    const enlistedNo = document.getElementById('search_enlisted_no').value.trim();
-    const armyId = document.getElementById('search_army_id').value.trim();
-    
-    if (!enlistedNo && !armyId) {
-        alert('Please enter either Enlisted No or Army ID');
-        return;
-    }
-    
-    // Show loading
-    const resultsDiv = document.getElementById('searchResults');
-    const resultsBody = document.getElementById('searchResultsBody');
-    const resultTitle = document.getElementById('searchResultTitle');
-    
-    resultsDiv.style.display = 'block';
-    resultsBody.innerHTML = '<tr><td colspan="9" class="text-center"><div class="spinner-border spinner-border-sm" role="status"></div> Searching...</td></tr>';
-    
-    // Make AJAX request
-    fetch(`{{ route('loans.search') }}?enlisted_no=${encodeURIComponent(enlistedNo)}&army_id=${encodeURIComponent(armyId)}&exclude_id={{ $loan->id }}`, {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            resultTitle.textContent = `Results for: ${data.search_criteria}`;
-            
-            if (data.loans.length === 0) {
-                resultsBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No approved loans found</td></tr>';
-            } else {
-                let html = '';
-                data.loans.forEach(loan => {
-                    // Determine deduction badge color
-                    let deductionBadge = '';
-                    if (loan.paid_months === loan.total_months) {
-                        deductionBadge = `<span class="badge bg-success">${loan.deduction_status} Paid</span>`;
-                    } else if (loan.paid_months > 0) {
-                        deductionBadge = `<span class="badge bg-warning">${loan.deduction_status} Paying</span>`;
-                    } else {
-                        deductionBadge = `<span class="badge bg-danger">${loan.deduction_status} Pending</span>`;
-                    }
-                    
-                    html += `
-                        <tr>
-                            <td><small>${loan.application_id}</small></td>
-                            <td><small>${loan.name}</small></td>
-                            <td><small>Rs. ${loan.loan_type_formatted}</small></td>
-                            <td><small class="text-success"><strong>Rs. ${loan.total_amount}</strong></small></td>
-                            <td><small>Rs. ${loan.monthly_amount}</small></td>
-                            <td><small><span class="badge bg-info">${loan.deduct_time_period} Months</span></small></td>
-                            <td><small><span class="badge bg-warning">${loan.interest_percentage}%</span></small></td>
-                            <td><small>${loan.date}</small></td>
-                            <td>${deductionBadge}</td>
-                        </tr>
-                    `;
-                });
-                resultsBody.innerHTML = html;
-            }
-        } else {
-            resultsBody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">${data.message}</td></tr>`;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        resultsBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger">Error searching loans. Please try again.</td></tr>';
-    });
-}
-
-// Allow Enter key to trigger search
-document.getElementById('search_enlisted_no').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        searchPreviousLoans();
-    }
-});
-
-document.getElementById('search_army_id').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        searchPreviousLoans();
-    }
-});
-
-// Auto-trigger search on page load
-document.addEventListener('DOMContentLoaded', function() {
-    searchPreviousLoans();
-});
-</script>
 @endsection

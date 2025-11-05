@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-4 mb-3">
                                             <label class="form-label">{{ __('Loan Type') }} <span class="text-danger">*</span></label>
                                             <select name="loan_type" class="form-select @error('loan_type') is-invalid @enderror" required>
                                                 <option value="">{{ __('Select Loan Type') }}</option>
@@ -30,7 +30,20 @@
                                             @error('loan_type')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">{{ __('Deduct Time Period') }} <span class="text-danger">*</span></label>
+                                            <select name="deduct_time_period" class="form-select @error('deduct_time_period') is-invalid @enderror" required>
+                                                <option value="">{{ __('Select Time Period') }}</option>
+                                                @foreach($loanInterests as $interest)
+                                                    <option value="{{ $interest->months }}" {{ old('deduct_time_period') == $interest->months ? 'selected' : '' }}>
+                                                        {{ $interest->months }} Months ({{ $interest->interest }}% Interest)
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('deduct_time_period')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
                                             <label class="form-label">{{ __('Enlisted No') }} <span class="text-danger">*</span></label>
                                             <input type="text" name="enlisted_no" class="form-control @error('enlisted_no') is-invalid @enderror" value="{{ old('enlisted_no') }}" required>
                                             @error('enlisted_no')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -89,7 +102,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">{{ __('Welfare Membership') }} <span class="text-danger">*</span></label>
+                                            <label class="form-label">{{ __('Membership') }} <span class="text-danger">*</span></label>
                                             <select name="welfare_membership" class="form-select @error('welfare_membership') is-invalid @enderror" required>
                                                 <option value="">{{ __('Select') }}</option>
                                                 <option value="Yes" {{ old('welfare_membership') == 'Yes' ? 'selected' : '' }}>Yes</option>
@@ -99,7 +112,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">{{ __('Welfare Membership Date') }}</label>
+                                            <label class="form-label">{{ __('Membership Date') }}</label>
                                             <input type="date" name="welfare_membership_date" class="form-control @error('welfare_membership_date') is-invalid @enderror" value="{{ old('welfare_membership_date') }}">
                                             @error('welfare_membership_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                         </div>
@@ -253,7 +266,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">{{ __('Welfare Membership') }} <span class="text-danger">*</span></label>
+                                            <label class="form-label">{{ __('Membership') }} <span class="text-danger">*</span></label>
                                             <select name="guarantor1_welfare_membership" class="form-select @error('guarantor1_welfare_membership') is-invalid @enderror" required>
                                                 <option value="">{{ __('Select') }}</option>
                                                 <option value="Yes" {{ old('guarantor1_welfare_membership') == 'Yes' ? 'selected' : '' }}>Yes</option>
@@ -343,7 +356,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">{{ __('Welfare Membership') }} <span class="text-danger">*</span></label>
+                                            <label class="form-label">{{ __('Membership') }} <span class="text-danger">*</span></label>
                                             <select name="guarantor2_welfare_membership" class="form-select @error('guarantor2_welfare_membership') is-invalid @enderror" required>
                                                 <option value="">{{ __('Select') }}</option>
                                                 <option value="Yes" {{ old('guarantor2_welfare_membership') == 'Yes' ? 'selected' : '' }}>Yes</option>

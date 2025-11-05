@@ -96,11 +96,6 @@
                                                     <a href="{{ route('stocks.show', $stock->id) }}" class="btn btn-sm btn-warning" title="{{ __('View') }}">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
-                                                    @if($stock->status == 'available')
-                                                        <button type="button" class="btn btn-sm btn-primary">
-                                                            {{ __('Issue') }}
-                                                        </button>
-                                                    @endif
                                                 </td>
                                             </tr>
                                         @empty
@@ -126,26 +121,28 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new DataTable('#stockTable', {
-                paging: true,
-                searching: true,
-                ordering: true,
-                responsive: true,
-                lengthMenu: [8, 25, 50, 100],
-                pageLength: 8,
-                language: {
-                    search: "SEARCH:_INPUT_",
-                    lengthMenu: "SHOW _MENU_ ENTRIES ",
-                    info: "Showing _TOTAL_ Entries",
-                    paginate: {
-                        previous: "Previous",
-                        next: "Next"
-                    }
-                },
-                columnDefs: [
-                    { orderable: false, targets: [5, 10] }
-                ]
-            });
+            @if($stocks->count() > 0)
+                new DataTable('#stockTable', {
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    responsive: true,
+                    lengthMenu: [8, 25, 50, 100],
+                    pageLength: 8,
+                    language: {
+                        search: "SEARCH:_INPUT_",
+                        lengthMenu: "SHOW _MENU_ ENTRIES ",
+                        info: "Showing _TOTAL_ Entries",
+                        paginate: {
+                            previous: "Previous",
+                            next: "Next"
+                        }
+                    },
+                    columnDefs: [
+                        { orderable: false, targets: [5, 10] }
+                    ]
+                });
+            @endif
         });
     </script>
 @endsection
