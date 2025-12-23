@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Regement;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -53,10 +54,13 @@ class RegementController extends Controller
             'active' => 'required|boolean',
         ]);
 
-        Regement::create([
+        $regement = Regement::create([
             'regement' => $request->regement,
             'active' => $request->active,
         ]);
+
+        // Send notification to all staff
+        NotificationService::regimentAdded($regement->regement);
 
         return redirect()->route('regements.index')->with('success', 'Regement created successfully.');
     }

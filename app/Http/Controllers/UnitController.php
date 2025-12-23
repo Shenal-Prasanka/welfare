@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Models\Regement;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class UnitController extends Controller
@@ -56,14 +57,16 @@ class UnitController extends Controller
          $request->validate([
             'unit' => 'required|string|unique:units,unit',
             'regement_id' => 'required|exists:regements,id',
-            'active' => 'required|boolean',
         ]);
 
-        Unit::create([
+        $unit = Unit::create([
             'unit' => $request->unit,
             'regement_id' => $request->regement_id,
-            'active' => $request->active,
+            'active' => 1,
         ]);
+
+        // Send notification to all staff
+        NotificationService::unitAdded($unit->unit);
 
         return redirect()->route('units.index')->with('success', 'Unit created successfully.');
     }
@@ -95,7 +98,6 @@ class UnitController extends Controller
          $request->validate([
             'unit' => 'required|string|unique:units,unit,' . $id,
             'regement_id' => 'required|exists:regements,id',
-            'active' => 'required|boolean',
         ]);
 
 
@@ -103,7 +105,7 @@ class UnitController extends Controller
 
         $unit->unit = $request->unit;
         $unit->regement_id = $request->regement_id;
-        $unit->active =$request->active;
+        $unit->active = 1;
         $unit->save();
 
         return redirect()->route('units.index')->with('warning', 'Unit updated successfully.');

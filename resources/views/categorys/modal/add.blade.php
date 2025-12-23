@@ -22,22 +22,6 @@
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
-                    <!-- Active Field -->
-                    <div class="col-md-12 mt-3">
-                        <label for="active" class="form-label">{{ __('Status') }}</label>
-                        <select name="active" id="active" class="form-select @error('active') is-invalid @enderror">
-                            <option disabled {{ old('active') === null ? 'selected' : '' }}>{{ __('Choose Status...') }}
-                            </option>
-                            <option value="1" {{ old('active') == '1' ? 'selected' : '' }}>{{ __('Active') }}
-                            </option>
-                            <option value="0" {{ old('active') == '0' ? 'selected' : '' }}>{{ __('Deactive') }}
-                            </option>
-                        </select>
-                        @error('active')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @else
-                        @enderror
-                    </div>
                     <!-- Description Field -->
                     <div class="col-md-12 mt-3">
                         <label for="description">{{ __('Description') }}</label>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Rank;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class RankController extends Controller
@@ -46,11 +47,14 @@ class RankController extends Controller
             'active' => 'required|boolean',
         ]);
 
-        Rank::create([
+        $rank = Rank::create([
             'rank' => $request->rank,
             'type' => $request->type,
             'active' => $request->active,
         ]);
+
+        // Send notification to all staff
+        NotificationService::rankAdded($rank->rank);
 
         return redirect()->route('ranks.index')->with('success', 'Rank created successfully.');
     }

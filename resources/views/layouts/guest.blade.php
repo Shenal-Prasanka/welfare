@@ -213,7 +213,7 @@
         /* Laptop/PC Specific Responsive Design */
         
         /* Standard Laptop (1366x768) */
-        @media (min-width: 1025px) and (max-width: 1440px) {
+        @media (min-width: 1367px) and (max-width: 1440px) {
             .welcome-title {
                 font-size: 36px;
                 padding: 15px 0 8px 0;
@@ -221,7 +221,7 @@
             
             .welcome-row {
                 padding: 15px;
-                gap: 60px;
+                gap: 50px;  /* Reduced gap */
             }
             
             .welcome-row img {
@@ -299,7 +299,7 @@
             
             .welcome-row {
                 padding: 10px;
-                gap: 40px;
+                gap: 30px;  /* Reduced gap */
             }
             
             .welcome-row img {
@@ -321,51 +321,167 @@
             }
         }
         
+        /* Minimum laptop screens (1024px - 1366px) */
+        @media (min-width: 1024px) and (max-width: 1366px) {
+            .welcome-title {
+                font-size: 30px;
+                padding: 10px 0 5px 0;
+            }
+            
+            .welcome-row {
+                padding: 8px;
+                gap: 25px;  /* Minimal gap */
+            }
+            
+            .welcome-row img {
+                width: 260px;
+                height: 260px;
+            }
+            
+            .login-box {
+                max-width: 310px;
+            }
+            
+            .card-body {
+                padding: 12px;
+            }
+            
+            footer.main-footer {
+                font-size: 12px;
+                padding: 5px 0;
+            }
+        }
+        
         /* Tablet and Mobile */
         @media (max-width: 1024px) {
             body {
                 overflow-y: auto;
+                overflow-x: hidden;
                 max-height: none;
+            }
+            
+            .welcome-title {
+                font-size: 24px;
+                padding: 10px 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                z-index: 10;
+                margin: 0;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             
             .welcome-row {
                 flex-direction: column;
                 text-align: center;
-                overflow-y: auto;
-                padding: 15px;
+                overflow-y: visible;
+                padding: 10px;
+                gap: 15px;
+                margin-top: 50px;  /* Reduced margin to show logo immediately */
             }
             
             .welcome-row img {
-                width: 250px;
-                height: 250px;
+                width: 200px;
+                height: 200px;
+                order: 1;  /* Logo shows first under title */
+                margin-top: 0;
             }
 
             .welcome-form {
                 padding: 0;
-                margin-top: 15px;
+                margin-top: 0;
+                order: 2;  /* Login form shows second */
             }
             
-            .welcome-title {
-                font-size: 28px;
-                padding: 15px 0;
+            footer.main-footer {
+                position: relative;
+                margin-top: 15px;
             }
         }
         
         /* Small Mobile */
         @media (max-width: 576px) {
+            body {
+                overflow-y: auto;
+            }
+            
             .welcome-title {
-                font-size: 24px;
-                padding: 10px 0;
+                font-size: 20px;
+                padding: 8px 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                z-index: 10;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .welcome-row {
+                padding: 8px;
+                gap: 12px;
+                margin-top: 45px;  /* Reduced to show logo immediately */
             }
             
             .welcome-row img {
-                width: 180px;
-                height: 180px;
+                width: 150px;
+                height: 150px;
+                margin-top: 0;
             }
             
             .login-box {
                 max-width: 100%;
-                padding: 0 15px;
+                padding: 0 10px;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+            
+            footer.main-footer {
+                font-size: 12px;
+                padding: 8px 0;
+            }
+        }
+        
+        /* Extra Small Mobile */
+        @media (max-width: 375px) {
+            body {
+                overflow-y: auto;
+            }
+            
+            .welcome-title {
+                font-size: 18px;
+                padding: 8px 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                z-index: 10;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .welcome-row {
+                margin-top: 42px;  /* Reduced to show logo immediately */
+                padding: 8px;
+                gap: 10px;
+            }
+            
+            .welcome-row img {
+                width: 130px;
+                height: 130px;
+                margin-top: 0;
+            }
+            
+            .login-box {
+                padding: 0 8px;
+            }
+            
+            .card-body {
+                padding: 12px;
             }
         }
     </style>

@@ -13,13 +13,13 @@
                     <input type="hidden" name="unit_id" id="editUnitId">
 
                     <div class="mb-3">
-                        <label for="editUnitName" class="form-label">{{ __('Unit') }}</label>
+                        <label for="editUnitName" class="form-label">{{ __('Unit') }} <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="editUnitName" name="unit">
                         <div class="invalid-feedback d-block" id="editUnitNameError"></div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editRegementId" class="form-label">{{ __('Regement') }}</label>
+                        <label for="editRegementId" class="form-label">{{ __('Regement') }} <span class="text-danger">*</span></label>
                         <select class="form-select" id="editRegementId" name="regement_id">
                             <option value="">{{ __('Select Regement') }}</option>
                             @foreach ($regements as $regement)

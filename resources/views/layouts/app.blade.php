@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, minimum-scale=0.8, maximum-scale=0.9, user-scalable=yes">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Bootstrap CSS -->
@@ -63,11 +63,16 @@
             flex-shrink: 0;
             background-color: #343a40;
             color: white;
-            padding: 8px 15px;
+            padding: 12px 20px;
             margin-left: 250px;
             transition: margin-left 0.3s ease;
             font-size: 0.9rem;
-            z-index: 1;
+            z-index: 1030;
+            width: calc(100% - 250px);
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            text-align: center;
         }
         
         .content-wrapper {
@@ -77,6 +82,7 @@
             background-color: #f4f6f9;
             margin-left: 250px;
             padding: 15px;
+            padding-bottom: 60px; /* Add padding to prevent content from being hidden behind fixed footer */
             transition: margin-left 0.3s ease;
             min-height: 0;
         }
@@ -333,10 +339,16 @@
         }
 
         /* Large Screens (1920px and above) */
-        @media (min-width: 1920px) {
-            .container-fluid {
-                max-width: 1800px;
-                margin: 0 auto;
+        @media (max-width: 767px) {
+            .main-footer {
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+                position: static;
+            }
+            .content-wrapper {
+                margin-left: 0;
+                padding-bottom: 15px;
             }
             
             html, body {
@@ -428,49 +440,71 @@
                     </a>
                 </li>
             </ul>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown me-3">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <ul class="navbar-nav ms-auto align-items-center">
+                @if(!auth()->user()->hasRole('User'))
+                    <!-- Notifications -->
+                    <li class="nav-item" style="margin-right: 2px;">
+                        <a class="nav-link position-relative d-flex align-items-center" href="{{ route('notifications.index') }}" title="Notifications">
+                            <i class="fas fa-bell" style="font-size: 20px;"></i>
+                            @php
+                                $notificationCount = \App\Models\Notification::where('user_id', auth()->id())->where('is_read', false)->count();
+                            @endphp
+                            @if($notificationCount > 0)
+                                <sup><span class="badge badge-danger" style="font-size: 10px; padding: 2px 5px;">{{ $notificationCount }}</span></sup>
+                            @endif
+                        </a>
+                    </li>
+
+                    <!-- Messages Notification -->
+                    <li class="nav-item" style="margin-right: 2px;">
+                        <a class="nav-link position-relative d-flex align-items-center" href="{{ route('messages.inbox') }}" title="Messages">
+                            <i class="fas fa-envelope" style="font-size: 20px;"></i>
+                            @php
+                                $unreadCount = \App\Models\Message::where('receiver_id', auth()->id())->where('is_read', false)->count();
+                            @endphp
+                            @if($unreadCount > 0)
+                                <sup><span class="badge badge-danger" style="font-size: 10px; padding: 2px 5px;">{{ $unreadCount }}</span></sup>
+                            @endif
+                        </a>
+                    </li>
+                @endif
+                
+                <!-- My Profile -->
+                <li class="nav-item" style="margin-right: 2px;">
+                    <a class="nav-link d-flex align-items-center" href="{{ route('profile.show') }}" title="My Profile">
                         @if(auth()->user()->profile_image)
-                            <img src="{{ route('image.show', auth()->user()->profile_image) }}" style="width: 30px; height: 30px; object-fit: cover; border-radius: 50%;">
+                            <img src="{{ route('image.show', auth()->user()->profile_image) }}" style="width: 20px; height: 20px; object-fit: cover; border-radius: 50%;" alt="Profile">
                         @else
-                            <i class="nav-icon fas fa-user-circle" style="font-size: 30px; color: #6c757d;"></i>
+                            <i class="fas fa-user-circle" style="font-size: 20px;"></i>
                         @endif
-                        {{ Auth::user()->name }}
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li>
-                            <a href="{{ route('profile.show') }}" class="dropdown-item">
-                                <i class="me-2 fas fa-user-circle"></i> {{ __('My Profile') }}
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item">
-                                    <i class="me-2 fas fa-sign-out-alt"></i> {{ __('Log Out') }}
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
+                </li>
+
+                <!-- Log Out -->
+                <li class="nav-item" style="margin-right: 2px;">
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-link nav-link d-flex align-items-center" style="border: none; background: none; padding: 0.5rem 0.75rem;" title="Log Out">
+                            <i class="fas fa-sign-out-alt" style="font-size: 20px;"></i>
+                        </button>
+                    </form>
                 </li>
             </ul>
         </nav>
 
         <!-- Sidebar -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="/" class="brand-link text-center">
-                <img src="{{ asset('/public/images/logo.png') }}" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Welfareshop</span>
+            <a href="/" class="brand-link text-center d-flex ml-1">
+                <img src="{{ asset('/public/images/logo.png') }}" class="brand-image img-circle elevation-3 mr-0" style="opacity: .8; float: none; display: inline-block;">
+                <span class="brand-text font-weight-light ml-2">Welfareshop</span>
             </a>
-            <div class="px-2 mt-2">
+          
                 @include('layouts.navigation')
-            </div>
+            
         </aside>
 
         <!-- Main Content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper bg-gray-light">
             @yield('content')
         </div>
 
@@ -483,8 +517,14 @@
         </aside>
 
         <!-- Footer -->
-        <footer class="main-footer text-center">
-            <strong>&copy; {{ date('Y') }} SL Army Welfareshop.</strong> All rights reserved.
+        <footer class="main-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <strong>&copy; {{ date('Y') }} SUWARNA Welfareshop.</strong> All rights reserved.
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
 
@@ -594,5 +634,7 @@
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @stack('scripts')
 </body>
 </html>

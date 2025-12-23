@@ -8,8 +8,7 @@
                     <div class="card">
                         <div class="card-header bg-dark">
                             <div class="col-12 d-flex justify-content-between align-items-center">
-                                <h5 class="m-0 font-weight-bold">{{ __('Roles') }}
-                                </h5>
+                                <h5 class="m-0 font-weight-bold">{{ __('Roles') }}</h5>
                                 @can('role-create')
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createRoleModal">

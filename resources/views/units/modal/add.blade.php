@@ -14,7 +14,7 @@
                     @csrf
                     <!-- Unit Field -->
                     <div class="col-md-12">
-                        <label for="unit">{{ __('Unit') }}</label>
+                        <label for="unit">{{ __('Unit') }} <span class="text-danger">*</span></label>
                         <input type="text" name="unit" id="unit"
                             class="form-control  @error('unit') is-invalid @enderror"
                             placeholder="{{ __('Enter Unit Name') }}" value="{{ old('unit') }}">
@@ -25,7 +25,7 @@
 
                     <!-- regement Field -->
                     <div class="col-md-12  mt-3">
-                        <label for="regement_id">{{ __('Regement') }}</label>
+                        <label for="regement_id">{{ __('Regement') }} <span class="text-danger">*</span></label>
                         <select name="regement_id" id="regement_id"
                             class="form-select @error('regement_id') is-invalid @enderror">
                             <option value="">{{ __('Select Regement....') }}</option>
@@ -41,21 +41,6 @@
                         @enderror
                     </div>
 
-                    <!-- Active Field -->
-                    <div class="col-md-12  mt-3">
-                        <label for="active" class="form-label">{{ __('Status') }}</label>
-                        <select name="active" id="active" class="form-select @error('active') is-invalid @enderror">
-                            <option disabled {{ old('active') === null ? 'selected' : '' }}>
-                                {{ __('Select status...') }}</option>
-                            <option value="1" {{ old('active') == '1' ? 'selected' : '' }}>{{ __('Active') }}
-                            </option>
-                            <option value="0" {{ old('active') == '0' ? 'selected' : '' }}>{{ __('Deactive') }}
-                            </option>
-                        </select>
-                        @error('active')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">{{ __('Add Unit') }}</button>
                         <button type="button" class="btn btn-warning"

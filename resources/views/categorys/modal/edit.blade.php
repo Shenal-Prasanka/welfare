@@ -14,23 +14,8 @@
                     <!-- Category Field -->
                    <div class="col-md-12">
                         <label for="editCategoryName" class="form-label">{{ __('Category') }}</label>
-                        <select name="category" id="editCategoryName" class="form-select">
-                            <option value="">{{ __('Choose...') }}</option>
-                            <option value="Electric">Electric</option>
-                            <option value="Electronic">Electronic</option>
-                            <option value="Furniture">Furniture</option>
-                        </select>
+                        <input type="text" name="category" id="editCategoryName" class="form-control" placeholder="{{ __('Enter Category') }}">
                         <div class="invalid-feedback d-block" id="editCategoryError"></div>
-                    </div>
-
-                    <!-- Active Field -->
-                    <div class="col-md-12 mt-3">
-                        <label for="editCategoryActive" class="form-label">{{ __('Status') }}</label>
-                        <select name="active" id="editCategoryActive" class="form-select">
-                            <option value="1">{{ __('Active') }}</option>
-                            <option value="0">{{ __('Deactive') }}</option>
-                        </select>
-                        <div class="invalid-feedback d-block" id="editActiveError"></div>
                     </div>
 
                     <!-- Description Field -->
@@ -58,13 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Get data from button
             document.getElementById('editCategoryId').value = this.dataset.id;
             document.getElementById('editCategoryName').value = this.dataset.category;
-            document.getElementById('editCategoryActive').value = this.dataset.active;
             document.getElementById('editCategoryDescription').value = this.dataset.description;
             document.getElementById('editCategoryForm').action = this.dataset.action;
 
             // Clear any old errors
             document.getElementById('editCategoryError').textContent = '';
-            document.getElementById('editActiveError').textContent = '';
             document.getElementById('editDescriptionError').textContent = '';
 
             // Show modal

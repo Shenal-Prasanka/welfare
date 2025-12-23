@@ -16,6 +16,7 @@
                             @endrole
                         </div>
                     </div>
+
                     <div class="card-body"> 
                         <div class="table-responsive">
                             <table id="itemLoansTable" class="table table-bordered w-100">
@@ -41,23 +42,31 @@
                                             <td>{{ $loan->item_name ?? 'N/A' }}</td>
                                             <td>{{ $loan->welfare ? $loan->welfare->name : 'N/A' }}</td>
                                             <td>
-                                                @if($loan->status == 'pending')
-                                                    <span class="badge bg-warning">{{ __('Pending') }}</span>
-                                                @elseif($loan->status == 'oc_approved')
-                                                    <span class="badge bg-info">{{ __('OC Approved') }}</span>
-                                                @elseif($loan->status == 'shop_coord_clerk_approved')
-                                                    <span class="badge bg-primary">{{ __('Coord Clerk Approved') }}</span>
-                                                @elseif($loan->status == 'shop_coord_oc_approved')
-                                                    <span class="badge bg-primary">{{ __('Shop Coord OC Approved') }}</span>
-                                                @elseif($loan->status == 'approved')
-                                                    <span class="badge bg-success">{{ __('Approved') }}</span>
-                                                @elseif($loan->status == 'shop_coord_rejected')
-                                                    <span class="badge bg-danger">{{ __('Shop Coord Rejected') }}</span>
-                                                @elseif($loan->status == 'shop_coord_oc_rejected')
-                                                    <span class="badge bg-danger">{{ __('Shop Coord OC Rejected') }}</span>
-                                                @else
-                                                    <span class="badge bg-danger">{{ __('Rejected') }}</span>
-                                                @endif
+                                                @switch($loan->status)
+                                                    @case('pending')
+                                                        <span class="badge bg-warning">{{ __('Pending') }}</span>
+                                                        @break
+                                                    @case('oc_approved')
+                                                        <span class="badge bg-info">{{ __('OC Approved') }}</span>
+                                                        @break
+                                                    @case('shop_coord_clerk_approved')
+                                                        <span class="badge bg-primary">{{ __('Coord Clerk Approved') }}</span>
+                                                        @break
+                                                    @case('shop_coord_oc_approved')
+                                                        <span class="badge bg-primary">{{ __('Shop Coord OC Approved') }}</span>
+                                                        @break
+                                                    @case('approved')
+                                                        <span class="badge bg-success">{{ __('Approved') }}</span>
+                                                        @break
+                                                    @case('shop_coord_rejected')
+                                                        <span class="badge bg-danger">{{ __('Shop Coord Rejected') }}</span>
+                                                        @break
+                                                    @case('shop_coord_oc_rejected')
+                                                        <span class="badge bg-danger">{{ __('Shop Coord OC Rejected') }}</span>
+                                                        @break
+                                                    @default
+                                                        <span class="badge bg-danger">{{ __('Rejected') }}</span>
+                                                @endswitch
                                             </td>
                                             <td>
                                                 @if($loan->creator)
@@ -73,42 +82,13 @@
                                                     <a href="{{ route('itemloans.show', $loan->id) }}" class="btn btn-sm btn-warning" title="{{ __('View') }}">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
-                                            
+                                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $loan->id }}" title="{{ __('Reject') }}">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
-                                        
-                                        <!-- Reject Modal for each loan -->
-                                        <div class="modal fade" id="rejectModal{{ $loan->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $loan->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header bg-dark text-white">
-                                                        <h5 class="modal-title" id="rejectModalLabel{{ $loan->id }}">{{ __('Reject Application') }}</h5>
-                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <form action="{{ route('itemloans.reject', $loan->id) }}" method="POST">
-                                                        @csrf
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label for="rejection_reason{{ $loan->id }}" class="form-label">{{ __('Rejection Reason') }} <span class="text-danger">*</span></label>
-                                                                <textarea class="form-control" id="rejection_reason{{ $loan->id }}" name="rejection_reason" rows="4" required></textarea>
-                                                            </div>
-                                                            <div class="alert alert-warning">
-                                                                <i class="bi bi-exclamation-triangle"></i> {{ __('This application will be sent back to Unit Clerk for revision.') }}
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                                                            <button type="submit" class="btn btn-danger">{{ __('Reject') }}</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
                                     @empty
-                                        <tr>
-                                            <td colspan="9" class="text-center">{{ __('No item loan applications found.') }}</td>
-                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -119,6 +99,39 @@
         </div>
     </div>
 </div>
+
+<!-- ✅ Move all modals OUTSIDE the table -->
+@foreach($itemLoans as $loan)
+<div class="modal fade" id="rejectModal{{ $loan->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $loan->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="rejectModalLabel{{ $loan->id }}">{{ __('Reject Application') }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('itemloans.reject', $loan->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="rejection_reason{{ $loan->id }}" class="form-label">
+                            {{ __('Rejection Reason') }} <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="rejection_reason{{ $loan->id }}" name="rejection_reason" rows="4" required></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        {{ __('This application will be sent back to Unit Clerk for revision.') }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                    <button type="submit" class="btn btn-danger">{{ __('Reject') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
 
 @section('scripts')
@@ -141,18 +154,18 @@
                 }
             },
             columnDefs: [
-                { orderable: false, targets: [8] } // Actions column
+                { orderable: false, targets: [8] } // Disable sorting on "Actions" column
             ]
         });
-    });
 
-    // Auto-hide alerts after 5 seconds
-    @if(session('success') || session('error'))
-        setTimeout(function() {
-            $('.alert').fadeOut('slow', function() {
-                $(this).remove();
-            });
-        }, 5000);
-    @endif
+        // Auto-hide alerts after 5 seconds
+        @if(session('success') || session('error'))
+            setTimeout(function() {
+                $('.alert').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        @endif
+    });
 </script>
 @endsection

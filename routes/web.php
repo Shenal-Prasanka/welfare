@@ -17,7 +17,7 @@ use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\dashboardController;
-use App\Http\Controllers\purchaseOrderController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ItemLoanController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\CrvController;
@@ -27,6 +27,8 @@ use App\Http\Controllers\ItemReturnController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     return view('auth.login'); // This is your login page.
@@ -235,5 +237,27 @@ Route::prefix('reports')->name('reports.')->group(function () {
     Route::get('/welfare-loans', [\App\Http\Controllers\ReportController::class, 'welfareLoanDetails'])->name('welfare-loans');
     Route::get('/welfare-pricelist', [\App\Http\Controllers\ReportController::class, 'welfarePriceList'])->name('welfare-pricelist');
     Route::get('/loans-regiment-wise', [\App\Http\Controllers\ReportController::class, 'loanDetailsRegimentWise'])->name('loans-regiment-wise');
+});
+
+// Message routes
+Route::middleware(['auth'])->prefix('messages')->name('messages.')->group(function () {
+    Route::get('/inbox', [MessageController::class, 'inbox'])->name('inbox');
+    Route::get('/sent', [MessageController::class, 'sent'])->name('sent');
+    Route::get('/create', [MessageController::class, 'create'])->name('create');
+    Route::post('/', [MessageController::class, 'store'])->name('store');
+    Route::get('/conversation/{userId}', [MessageController::class, 'conversation'])->name('conversation');
+    Route::get('/{id}', [MessageController::class, 'show'])->name('show');
+    Route::delete('/{id}', [MessageController::class, 'destroy'])->name('destroy');
+    Route::get('/api/unread-count', [MessageController::class, 'unreadCount'])->name('unread-count');
+    Route::post('/{id}/mark-as-read', [MessageController::class, 'markAsRead'])->name('mark-as-read');
+});
+
+// Notification routes
+Route::middleware(['auth'])->prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::get('/api/unread-count', [NotificationController::class, 'unreadCount'])->name('unread-count');
+    Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
+    Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+    Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
 });
 

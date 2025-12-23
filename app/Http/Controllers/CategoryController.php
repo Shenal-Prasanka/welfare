@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Category;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -51,14 +52,16 @@ class CategoryController extends Controller
          $request->validate([
             'category' => 'required|string|unique:categorys,category',
             'description' => 'nullable|string',
-            'active' => 'required|boolean',
         ]);
 
-        Category::create([
+        $category = Category::create([
             'category' => $request->category,
             'description' => $request->description,
-            'active' => $request->active,     
+            'active' => 1,     
         ]);
+
+        // Send notification to all staff
+        NotificationService::categoryAdded($category->category);
 
         return redirect()->route('categorys.index')->with('success', 'category created successfully.');
     }
@@ -86,7 +89,6 @@ class CategoryController extends Controller
     {
         $request->validate([
             'category' => 'required|string|unique:categorys,category',
-            'active' => 'required|boolean',
             'description' => 'nullable|string',
         ]);
 
@@ -94,7 +96,7 @@ class CategoryController extends Controller
 
         $category->category = $request->category;
         $category->description = $request->description;
-        $category->active =$request->active;
+        $category->active = 1;
         $category->save();
 
         return redirect()->route('categorys.index')->with('warning', 'Category updated successfully.');

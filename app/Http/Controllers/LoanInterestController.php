@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LoanInterest;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class LoanInterestController extends Controller
@@ -34,7 +35,10 @@ class LoanInterestController extends Controller
             'interest' => 'required|numeric|min:0|max:100',
         ]);
 
-        LoanInterest::create($validated);
+        $loanInterest = LoanInterest::create($validated);
+
+        // Send notification to all staff
+        NotificationService::loanInterestUpdated($loanInterest->interest);
 
         return redirect()->route('loaninterests.index')->with('success', 'Loan interest created successfully.');
     }
@@ -66,6 +70,9 @@ class LoanInterestController extends Controller
         ]);
 
         $loaninterest->update($validated);
+
+        // Send notification to all staff
+        NotificationService::loanInterestUpdated($loaninterest->interest);
 
         return redirect()->route('loaninterests.index')->with('success', 'Loan interest updated successfully.');
     }
